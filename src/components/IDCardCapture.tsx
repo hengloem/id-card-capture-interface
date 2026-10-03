@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, useState } from 'react';
 import Webcam from 'react-webcam';
 import { Camera, RefreshCw, Check, ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
-import { uploadImage, saveIDCardCapture, dataURLtoBlob } from '../utils/imageUpload';
+import { saveCapture } from '../utils/captureStorage';
 
 type CaptureStep = 'front' | 'back' | 'owner' | 'review' | 'complete';
 
@@ -73,22 +73,13 @@ const IDCardCapture: React.FC = () => {
     setIsUploading(true);
 
     try {
-      const timestamp = Date.now();
-      const frontBlob = dataURLtoBlob(capturedImages.front);
-      const backBlob = dataURLtoBlob(capturedImages.back);
-      const ownerBlob = dataURLtoBlob(capturedImages.owner);
-
-      const frontUrl = await uploadImage(frontBlob, `${timestamp}_front.jpg`);
-      const backUrl = await uploadImage(backBlob, `${timestamp}_back.jpg`);
-      const ownerUrl = await uploadImage(ownerBlob, `${timestamp}_owner.jpg`);
-
-      if (frontUrl && backUrl && ownerUrl) {
-        const id = await saveIDCardCapture(frontUrl, backUrl, ownerUrl);
-        if (id) {
-          setCaptureId(id);
-          setCurrentStep('complete');
-        }
-      }
+      const id = saveCapture(
+        capturedImages.front,
+        capturedImages.back,
+        capturedImages.owner
+      );
+      setCaptureId(id);
+      setCurrentStep('complete');
     } catch (error) {
       console.error('Error submitting capture:', error);
     } finally {
