@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { Copy, Check, Code2, Package, Settings } from 'lucide-react';
+import { Copy, Check, Code2, Package, Settings, Palette } from 'lucide-react';
+import type { Theme } from '../utils/themes';
 
-type TabKey = 'install' | 'component' | 'storage' | 'usage';
+type TabKey = 'install' | 'component' | 'storage' | 'theme' | 'usage';
 
 interface Tab {
   key: TabKey;
   label: string;
   icon: React.ReactNode;
   filename: string;
-  language: string;
-  code: string;
+  code: (theme: Theme) => string;
 }
 
 const TABS: Tab[] = [
@@ -18,8 +18,7 @@ const TABS: Tab[] = [
     label: 'Install',
     icon: <Package className="w-4 h-4" />,
     filename: 'Terminal',
-    language: 'bash',
-    code: `npm install react-webcam lucide-react
+    code: () => `npm install react-webcam lucide-react
 
 # or with yarn
 yarn add react-webcam lucide-react
@@ -32,11 +31,11 @@ pnpm add react-webcam lucide-react`,
     label: 'Component',
     icon: <Code2 className="w-4 h-4" />,
     filename: 'IDCardCapture.tsx',
-    language: 'tsx',
-    code: `import React, { useCallback, useRef, useState } from 'react';
+    code: () => `import React, { useCallback, useRef, useState } from 'react';
 import Webcam from 'react-webcam';
 import { Camera, RefreshCw, Check, ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
 import { saveCapture } from '../utils/captureStorage';
+import type { Theme } from '../utils/themes';
 
 type CaptureStep = 'front' | 'back' | 'owner' | 'review' | 'complete';
 
@@ -46,7 +45,11 @@ interface CapturedImages {
   owner: string | null;
 }
 
-const IDCardCapture: React.FC = () => {
+interface IDCardCaptureProps {
+  theme: Theme;
+}
+
+const IDCardCapture: React.FC<IDCardCaptureProps> = ({ theme }) => {
   const webcamRef = useRef<Webcam>(null);
   const [currentStep, setCurrentStep] = useState<CaptureStep>('front');
   const [capturedImages, setCapturedImages] = useState<CapturedImages>({
@@ -70,22 +73,6 @@ const IDCardCapture: React.FC = () => {
     }
   }, [currentStep]);
 
-  const retake = () => {
-    setCapturedImages((prev) => ({ ...prev, [currentStep]: null }));
-  };
-
-  const nextStep = () => {
-    if (currentStep === 'front') setCurrentStep('back');
-    else if (currentStep === 'back') setCurrentStep('owner');
-    else if (currentStep === 'owner') setCurrentStep('review');
-  };
-
-  const previousStep = () => {
-    if (currentStep === 'back') setCurrentStep('front');
-    else if (currentStep === 'owner') setCurrentStep('back');
-    else if (currentStep === 'review') setCurrentStep('owner');
-  };
-
   const handleSubmit = async () => {
     if (!capturedImages.front || !capturedImages.back || !capturedImages.owner) return;
     setIsUploading(true);
@@ -104,14 +91,8 @@ const IDCardCapture: React.FC = () => {
     }
   };
 
-  const startOver = () => {
-    setCapturedImages({ front: null, back: null, owner: null });
-    setCurrentStep('front');
-    setCaptureId(null);
-  };
-
-  // ...renders the camera UI, review screen, and completion screen
-  // Full UI code omitted here for brevity — see the live demo on the left.
+  // Pass the theme object as a prop — all colors come from it.
+  // Switch themes by passing a different Theme to the component.
 
   return <div>{/* Your capture UI here */}</div>;
 };
@@ -123,8 +104,7 @@ export default IDCardCapture;`,
     label: 'Storage',
     icon: <Settings className="w-4 h-4" />,
     filename: 'captureStorage.ts',
-    language: 'typescript',
-    code: `const STORAGE_KEY = 'id_card_captures';
+    code: () => `const STORAGE_KEY = 'id_card_captures';
 
 export interface StoredCapture {
   id: string;
@@ -183,17 +163,100 @@ function generateId(): string {
 }`,
   },
   {
+    key: 'theme',
+    label: 'Theme',
+    icon: <Palette className="w-4 h-4" />,
+    filename: 'themes.ts',
+    code: (theme) => `export type ThemeKey = 'ocean' | 'emerald' | 'sunset' | 'midnight';
+
+export interface Theme {
+  key: ThemeKey;
+  name: string;
+  headerGradient: string;
+  primaryBtn: string;
+  primaryBtnHover: string;
+  secondaryBtn: string;
+  secondaryBtnHover: string;
+  submitBtn: string;
+  submitBtnHover: string;
+  dotActive: string;
+  dotInactive: string;
+  bannerBg: string;
+  bannerBorder: string;
+  bannerText: string;
+  successBg: string;
+  successIcon: string;
+  accentText: string;
+  accentHover: string;
+}
+
+// Currently selected: "${theme.name}" (${theme.key})
+// Switch themes in the header to see this change.
+
+export const THEMES: Record<ThemeKey, Theme> = {
+  ocean: {
+    key: 'ocean', name: 'Ocean',
+    headerGradient: 'from-blue-600 to-blue-700',
+    primaryBtn: 'bg-blue-600', primaryBtnHover: 'hover:bg-blue-700',
+    secondaryBtn: 'bg-gray-500', secondaryBtnHover: 'hover:bg-gray-600',
+    submitBtn: 'bg-green-600', submitBtnHover: 'hover:bg-green-700',
+    dotActive: 'bg-white', dotInactive: 'bg-blue-400',
+    bannerBg: 'bg-blue-50', bannerBorder: 'border-blue-200', bannerText: 'text-blue-800',
+    successBg: 'bg-green-100', successIcon: 'text-green-600',
+    accentText: 'text-blue-600', accentHover: 'hover:text-blue-700',
+  },
+  emerald: {
+    key: 'emerald', name: 'Emerald',
+    headerGradient: 'from-emerald-600 to-teal-700',
+    primaryBtn: 'bg-emerald-600', primaryBtnHover: 'hover:bg-emerald-700',
+    secondaryBtn: 'bg-gray-500', secondaryBtnHover: 'hover:bg-gray-600',
+    submitBtn: 'bg-teal-600', submitBtnHover: 'hover:bg-teal-700',
+    dotActive: 'bg-white', dotInactive: 'bg-emerald-400',
+    bannerBg: 'bg-emerald-50', bannerBorder: 'border-emerald-200', bannerText: 'text-emerald-800',
+    successBg: 'bg-teal-100', successIcon: 'text-teal-600',
+    accentText: 'text-emerald-600', accentHover: 'hover:text-emerald-700',
+  },
+  sunset: {
+    key: 'sunset', name: 'Sunset',
+    headerGradient: 'from-orange-500 to-rose-600',
+    primaryBtn: 'bg-orange-500', primaryBtnHover: 'hover:bg-orange-600',
+    secondaryBtn: 'bg-gray-500', secondaryBtnHover: 'hover:bg-gray-600',
+    submitBtn: 'bg-rose-600', submitBtnHover: 'hover:bg-rose-700',
+    dotActive: 'bg-white', dotInactive: 'bg-orange-300',
+    bannerBg: 'bg-orange-50', bannerBorder: 'border-orange-200', bannerText: 'text-orange-800',
+    successBg: 'bg-rose-100', successIcon: 'text-rose-600',
+    accentText: 'text-orange-600', accentHover: 'hover:text-orange-700',
+  },
+  midnight: {
+    key: 'midnight', name: 'Midnight',
+    headerGradient: 'from-slate-700 to-slate-900',
+    primaryBtn: 'bg-cyan-600', primaryBtnHover: 'hover:bg-cyan-700',
+    secondaryBtn: 'bg-slate-600', secondaryBtnHover: 'hover:bg-slate-700',
+    submitBtn: 'bg-cyan-600', submitBtnHover: 'hover:bg-cyan-700',
+    dotActive: 'bg-cyan-400', dotInactive: 'bg-slate-600',
+    bannerBg: 'bg-slate-800', bannerBorder: 'border-slate-600', bannerText: 'text-cyan-300',
+    successBg: 'bg-cyan-900', successIcon: 'text-cyan-400',
+    accentText: 'text-cyan-400', accentHover: 'hover:text-cyan-300',
+  },
+};`,
+  },
+  {
     key: 'usage',
     label: 'Usage',
     icon: <Code2 className="w-4 h-4" />,
     filename: 'App.tsx',
-    language: 'tsx',
-    code: `import IDCardCapture from './components/IDCardCapture';
+    code: (theme) => `import { useState } from 'react';
+import IDCardCapture from './components/IDCardCapture';
+import { THEMES, type ThemeKey } from './utils/themes';
 
 function App() {
+  const [themeKey, setThemeKey] = useState<ThemeKey>('ocean');
+  const theme = THEMES[themeKey];
+
   return (
-    <div className="min-h-screen bg-gray-100">
-      <IDCardCapture />
+    <div className="min-h-screen bg-slate-950">
+      {/* Switch themes: 'ocean' | 'emerald' | 'sunset' | 'midnight' */}
+      <IDCardCapture theme={theme} />
     </div>
   );
 }
@@ -202,15 +265,20 @@ export default App;`,
   },
 ];
 
-const CodePanel: React.FC = () => {
+interface CodePanelProps {
+  theme: Theme;
+}
+
+const CodePanel: React.FC<CodePanelProps> = ({ theme }) => {
   const [activeTab, setActiveTab] = useState<TabKey>('install');
   const [copied, setCopied] = useState(false);
 
   const currentTab = TABS.find((t) => t.key === activeTab)!;
+  const code = currentTab.code(theme);
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(currentTab.code);
+      await navigator.clipboard.writeText(code);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
@@ -272,12 +340,17 @@ const CodePanel: React.FC = () => {
           <div className="w-2.5 h-2.5 rounded-full bg-green-400/70" />
         </div>
         <span className="text-slate-400 text-xs font-mono ml-2">{currentTab.filename}</span>
+        {activeTab === 'theme' && (
+          <span className="ml-auto text-xs text-slate-500">
+            Active: <span className="text-blue-400">{theme.name}</span>
+          </span>
+        )}
       </div>
 
       {/* Code area */}
       <div className="flex-1 overflow-auto custom-scrollbar">
         <pre className="p-4 text-sm leading-relaxed font-mono text-slate-300">
-          <code>{currentTab.code}</code>
+          <code>{code}</code>
         </pre>
       </div>
     </div>
