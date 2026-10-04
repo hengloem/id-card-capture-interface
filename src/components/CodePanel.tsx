@@ -64,7 +64,7 @@ const CodePanel: React.FC<CodePanelProps> = ({ theme }) => {
         </div>
 
         {/* Snippet tabs */}
-        <div className="flex items-center overflow-x-auto">
+        <div className="flex items-center overflow-x-auto custom-scrollbar">
           {snippets.map((snippet, idx) => (
             <button
               key={snippet.label}

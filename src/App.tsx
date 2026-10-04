@@ -54,7 +54,7 @@ function App() {
               </h2>
               <span className={`ml-auto text-xs ${theme.labelMuted} opacity-60`}>Camera required</span>
             </div>
-            <div className={`flex-1 min-h-0 overflow-auto rounded-xl ${theme.cardBg} border ${theme.pageBorder}`}>
+            <div className={`flex-1 min-h-0 overflow-auto custom-scrollbar rounded-xl ${theme.cardBg} border ${theme.pageBorder}`}>
               <IDCardCapture theme={theme} />
             </div>
           </section>

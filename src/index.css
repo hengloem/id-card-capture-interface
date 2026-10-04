@@ -2,18 +2,58 @@
 @tailwind components;
 @tailwind utilities;
 
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
+/* ===== Custom Scrollbar ===== */
+/* Global styling for all scrollable elements */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #3b3b52 transparent;
 }
-.custom-scrollbar::-webkit-scrollbar-track {
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
   background: transparent;
 }
-.custom-scrollbar::-webkit-scrollbar-thumb {
+
+::-webkit-scrollbar-thumb {
   background: #3b3b52;
-  border-radius: 3px;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4c4c6a;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Premium themed scrollbar for demo panels */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: background 0.2s ease;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #4c4c6a;
+  background: rgba(255, 255, 255, 0.25);
+  background-clip: padding-box;
 }
 
 @keyframes scanline {
