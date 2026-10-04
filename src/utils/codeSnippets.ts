@@ -228,6 +228,144 @@ export const THEMES: Record<ThemeKey, Theme> = {
 };`,
   },
   {
+    label: 'Frame',
+    filename: 'CameraFrame.tsx',
+    icon: 'code',
+    code: (theme) => `import React from 'react';
+
+export type FrameStyle = 'rounded' | 'card' | 'circle' | 'corners' | 'scanline';
+
+export const FRAME_OPTIONS: { key: FrameStyle; name: string }[] = [
+  { key: 'rounded', name: 'Rounded' },
+  { key: 'card', name: 'ID Card' },
+  { key: 'circle', name: 'Circle' },
+  { key: 'corners', name: 'Corners' },
+  { key: 'scanline', name: 'Scan Line' },
+];
+
+// Accent color for the active theme "${theme.name}":
+// ${theme.key === 'ocean' ? '#2563eb' : theme.key === 'emerald' ? '#059669' : theme.key === 'sunset' ? '#f97316' : '#0891b2'}
+
+interface CameraFrameProps {
+  style: FrameStyle;
+  step: 'front' | 'back' | 'owner';
+  accentColor: string;
+}
+
+const CameraFrame: React.FC<CameraFrameProps> = ({ style, step, accentColor }) => {
+  switch (style) {
+    case 'rounded':
+      return (
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-8 border-4 border-dashed
+                          border-white/70 rounded-2xl" />
+        </div>
+      );
+
+    case 'card':
+      return (
+        <div className="absolute inset-0 pointer-events-none flex
+                        items-center justify-center">
+          <div className="relative border-2 border-white/80 rounded-xl"
+               style={{ width: '70%',
+                        aspectRatio: step === 'owner' ? '1' : '1.586' }}>
+            <div className="absolute -top-1 -left-1 w-4 h-4
+                            border-t-4 border-l-4 rounded-tl-md"
+                 style={{ borderColor: accentColor }} />
+            <div className="absolute -top-1 -right-1 w-4 h-4
+                            border-t-4 border-r-4 rounded-tr-md"
+                 style={{ borderColor: accentColor }} />
+            <div className="absolute -bottom-1 -left-1 w-4 h-4
+                            border-b-4 border-l-4 rounded-bl-md"
+                 style={{ borderColor: accentColor }} />
+            <div className="absolute -bottom-1 -right-1 w-4 h-4
+                            border-b-4 border-r-4 rounded-br-md"
+                 style={{ borderColor: accentColor }} />
+          </div>
+        </div>
+      );
+
+    case 'circle':
+      return (
+        <div className="absolute inset-0 pointer-events-none flex
+                        items-center justify-center">
+          <div className="relative">
+            <div className="rounded-full border-4 border-white/80"
+                 style={{ width: step === 'owner' ? '60%' : '50%',
+                          aspectRatio: '1',
+                          maxWidth: '320px', minWidth: '180px' }} />
+            <div className="absolute top-1/2 -left-3 w-5 h-0.5 bg-white/60" />
+            <div className="absolute top-1/2 -right-3 w-5 h-0.5 bg-white/60" />
+            <div className="absolute left-1/2 -top-3 h-5 w-0.5 bg-white/60" />
+            <div className="absolute left-1/2 -bottom-3 h-5 w-0.5 bg-white/60" />
+          </div>
+        </div>
+      );
+
+    case 'corners':
+      return (
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-6">
+            <div className="absolute top-0 left-0 w-10 h-10
+                            border-t-4 border-l-4 rounded-tl-lg"
+                 style={{ borderColor: accentColor }} />
+            <div className="absolute top-0 right-0 w-10 h-10
+                            border-t-4 border-r-4 rounded-tr-lg"
+                 style={{ borderColor: accentColor }} />
+            <div className="absolute bottom-0 left-0 w-10 h-10
+                            border-b-4 border-l-4 rounded-bl-lg"
+                 style={{ borderColor: accentColor }} />
+            <div className="absolute bottom-0 right-0 w-10 h-10
+                            border-b-4 border-r-4 rounded-br-lg"
+                 style={{ borderColor: accentColor }} />
+          </div>
+        </div>
+      );
+
+    case 'scanline':
+      return (
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-6 border-2 border-white/50
+                          rounded-xl overflow-hidden">
+            <div className="absolute left-0 right-0 h-1 animate-scanline"
+                 style={{
+                   background: \`linear-gradient(to right, transparent, \${accentColor}, transparent)\`,
+                   boxShadow: \`0 0 12px \${accentColor}\`,
+                 }} />
+            <div className="absolute top-0 left-0 w-8 h-8
+                            border-t-[3px] border-l-[3px] border-white/80
+                            rounded-tl-md" />
+            <div className="absolute top-0 right-0 w-8 h-8
+                            border-t-[3px] border-r-[3px] border-white/80
+                            rounded-tr-md" />
+            <div className="absolute bottom-0 left-0 w-8 h-8
+                            border-b-[3px] border-l-[3px] border-white/80
+                            rounded-bl-md" />
+            <div className="absolute bottom-0 right-0 w-8 h-8
+                            border-b-[3px] border-r-[3px] border-white/80
+                            rounded-br-md" />
+          </div>
+        </div>
+      );
+
+    default:
+      return null;
+  }
+};
+
+export default CameraFrame;
+
+// CSS for scanline animation (add to index.css):
+// @keyframes scanline {
+//   0% { top: 0%; }
+//   50% { top: calc(100% - 4px); }
+//   100% { top: 0%; }
+// }
+// .animate-scanline {
+//   animation: scanline 2.5s ease-in-out infinite;
+// }`,
+  },
+  {
     label: 'Usage',
     filename: 'App.tsx',
     icon: 'code',
@@ -605,6 +743,126 @@ export const THEMES: Record<ThemeKey, Theme> = {
     accentText: 'text-cyan-400', accentHover: 'hover:text-cyan-300',
   },
 };`,
+  },
+  {
+    label: 'Frame',
+    filename: 'camera-frame.component.ts',
+    icon: 'code',
+    code: (theme) => `import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+export type FrameStyle = 'rounded' | 'card' | 'circle' | 'corners' | 'scanline';
+
+// Accent color for the active theme "${theme.name}":
+// ${theme.key === 'ocean' ? '#2563eb' : theme.key === 'emerald' ? '#059669' : theme.key === 'sunset' ? '#f97316' : '#0891b2'}
+
+@Component({
+  selector: 'app-camera-frame',
+  standalone: true,
+  imports: [CommonModule],
+  template: \`
+    @switch (style) {
+      @case ('rounded') {
+        <div class="absolute inset-0 pointer-events-none">
+          <div class="absolute inset-8 border-4 border-dashed
+                      border-white/70 rounded-2xl"></div>
+        </div>
+      }
+      @case ('card') {
+        <div class="absolute inset-0 pointer-events-none flex
+                    items-center justify-center">
+          <div class="relative border-2 border-white/80 rounded-xl"
+               [style.width.%]="70"
+               [style.aspectRatio]="step === 'owner' ? '1' : '1.586'">
+            <div class="absolute -top-1 -left-1 w-4 h-4
+                        border-t-4 border-l-4 rounded-tl-md"
+                 [style.borderColor]="accentColor"></div>
+            <div class="absolute -top-1 -right-1 w-4 h-4
+                        border-t-4 border-r-4 rounded-tr-md"
+                 [style.borderColor]="accentColor"></div>
+            <div class="absolute -bottom-1 -left-1 w-4 h-4
+                        border-b-4 border-l-4 rounded-bl-md"
+                 [style.borderColor]="accentColor"></div>
+            <div class="absolute -bottom-1 -right-1 w-4 h-4
+                        border-b-4 border-r-4 rounded-br-md"
+                 [style.borderColor]="accentColor"></div>
+          </div>
+        </div>
+      }
+      @case ('circle') {
+        <div class="absolute inset-0 pointer-events-none flex
+                    items-center justify-center">
+          <div class="relative">
+            <div class="rounded-full border-4 border-white/80"
+                 [style.width.%]="step === 'owner' ? 60 : 50"
+                 style.aspect-ratio: 1; max-width: 320px; min-width: 180px;">
+            </div>
+            <div class="absolute top-1/2 -left-3 w-5 h-0.5 bg-white/60"></div>
+            <div class="absolute top-1/2 -right-3 w-5 h-0.5 bg-white/60"></div>
+            <div class="absolute left-1/2 -top-3 h-5 w-0.5 bg-white/60"></div>
+            <div class="absolute left-1/2 -bottom-3 h-5 w-0.5 bg-white/60"></div>
+          </div>
+        </div>
+      }
+      @case ('corners') {
+        <div class="absolute inset-0 pointer-events-none">
+          <div class="absolute inset-6">
+            <div class="absolute top-0 left-0 w-10 h-10
+                        border-t-4 border-l-4 rounded-tl-lg"
+                 [style.borderColor]="accentColor"></div>
+            <div class="absolute top-0 right-0 w-10 h-10
+                        border-t-4 border-r-4 rounded-tr-lg"
+                 [style.borderColor]="accentColor"></div>
+            <div class="absolute bottom-0 left-0 w-10 h-10
+                        border-b-4 border-l-4 rounded-bl-lg"
+                 [style.borderColor]="accentColor"></div>
+            <div class="absolute bottom-0 right-0 w-10 h-10
+                        border-b-4 border-r-4 rounded-br-lg"
+                 [style.borderColor]="accentColor"></div>
+          </div>
+        </div>
+      }
+      @case ('scanline') {
+        <div class="absolute inset-0 pointer-events-none">
+          <div class="absolute inset-6 border-2 border-white/50
+                      rounded-xl overflow-hidden">
+            <div class="absolute left-0 right-0 h-1 animate-scanline"
+                 [style.background]="'linear-gradient(to right, transparent, ' + accentColor + ', transparent)'"
+                 [style.boxShadow]="'0 0 12px ' + accentColor">
+            </div>
+            <div class="absolute top-0 left-0 w-8 h-8
+                        border-t-[3px] border-l-[3px] border-white/80
+                        rounded-tl-md"></div>
+            <div class="absolute top-0 right-0 w-8 h-8
+                        border-t-[3px] border-r-[3px] border-white/80
+                        rounded-tr-md"></div>
+            <div class="absolute bottom-0 left-0 w-8 h-8
+                        border-b-[3px] border-l-[3px] border-white/80
+                        rounded-bl-md"></div>
+            <div class="absolute bottom-0 right-0 w-8 h-8
+                        border-b-[3px] border-r-[3px] border-white/80
+                        rounded-br-md"></div>
+          </div>
+        </div>
+      }
+    }
+  \`,
+})
+export class CameraFrameComponent {
+  @Input() style: FrameStyle = 'rounded';
+  @Input() step: 'front' | 'back' | 'owner' = 'front';
+  @Input() accentColor = '#2563eb';
+}
+
+// CSS for scanline animation (add to styles.css):
+// @keyframes scanline {
+//   0% { top: 0%; }
+//   50% { top: calc(100% - 4px); }
+//   100% { top: 0%; }
+// }
+// .animate-scanline {
+//   animation: scanline 2.5s ease-in-out infinite;
+// }`,
   },
   {
     label: 'Usage',

@@ -15,3 +15,13 @@
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #4c4c6a;
 }
+
+@keyframes scanline {
+  0% { top: 0%; }
+  50% { top: calc(100% - 4px); }
+  100% { top: 0%; }
+}
+
+.animate-scanline {
+  animation: scanline 2.5s ease-in-out infinite;
+}

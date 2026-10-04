@@ -1,8 +1,16 @@
 import React, { useCallback, useRef, useState } from 'react';
 import Webcam from 'react-webcam';
-import { Camera, RefreshCw, Check, ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
+import { Camera, RefreshCw, Check, ArrowLeft, ArrowRight, Loader2, ScanLine } from 'lucide-react';
 import { saveCapture } from '../utils/captureStorage';
 import type { Theme } from '../utils/themes';
+import CameraFrame, { FRAME_OPTIONS, type FrameStyle } from './CameraFrame';
+
+const ACCENT_HEX: Record<string, string> = {
+  ocean: '#2563eb',
+  emerald: '#059669',
+  sunset: '#f97316',
+  midnight: '#0891b2',
+};
 
 type CaptureStep = 'front' | 'back' | 'owner' | 'review' | 'complete';
 
@@ -26,6 +34,7 @@ const IDCardCapture: React.FC<IDCardCaptureProps> = ({ theme }) => {
   });
   const [isUploading, setIsUploading] = useState(false);
   const [captureId, setCaptureId] = useState<string | null>(null);
+  const [frameStyle, setFrameStyle] = useState<FrameStyle>('rounded');
 
   const videoConstraints = {
     width: 1280,
@@ -283,7 +292,30 @@ const IDCardCapture: React.FC<IDCardCaptureProps> = ({ theme }) => {
                     videoConstraints={videoConstraints}
                     className="w-full rounded-lg"
                   />
-                  <div className="absolute inset-0 border-4 border-dashed border-white m-8 rounded-lg pointer-events-none opacity-50" />
+                  <CameraFrame
+                    style={frameStyle}
+                    step={currentStep as 'front' | 'back' | 'owner'}
+                    accentColor={ACCENT_HEX[theme.key] ?? '#2563eb'}
+                  />
+                </div>
+
+                {/* Frame style selector */}
+                <div className="flex items-center gap-2 flex-wrap">
+                  <ScanLine className="w-4 h-4 text-gray-500 shrink-0" />
+                  {FRAME_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.key}
+                      onClick={() => setFrameStyle(opt.key)}
+                      title={opt.description}
+                      className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                        frameStyle === opt.key
+                          ? `${theme.primaryBtn} text-white shadow-sm`
+                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      }`}
+                    >
+                      {opt.name}
+                    </button>
+                  ))}
                 </div>
 
                 <div className="flex justify-center">
