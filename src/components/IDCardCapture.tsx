@@ -141,15 +141,15 @@ const IDCardCapture: React.FC<IDCardCaptureProps> = ({ theme }) => {
 
   if (currentStep === 'complete') {
     return (
-      <div className="max-w-4xl mx-auto p-4">
+      <div className="max-w-4xl mx-auto p-3 sm:p-4">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          <div className="p-8 text-center">
+          <div className="p-6 sm:p-8 text-center">
             <div className="flex justify-center mb-6">
-              <div className={`${theme.successBg} rounded-full p-6`}>
-                <Check className={`w-16 h-16 ${theme.successIcon}`} />
+              <div className={`${theme.successBg} rounded-full p-4 sm:p-6`}>
+                <Check className={`w-12 h-12 sm:w-16 sm:h-16 ${theme.successIcon}`} />
               </div>
             </div>
-            <h2 className="text-3xl font-bold text-gray-800 mb-4">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 mb-3 sm:mb-4">
               ID Verification Submitted
             </h2>
             <p className="text-gray-600 mb-2">
@@ -174,12 +174,12 @@ const IDCardCapture: React.FC<IDCardCaptureProps> = ({ theme }) => {
 
   if (currentStep === 'review') {
     return (
-      <div className="max-w-6xl mx-auto p-4">
+      <div className="max-w-6xl mx-auto p-3 sm:p-4">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          <div className="p-6">
-            <h2 className="text-3xl font-bold text-gray-800 mb-6">{getStepTitle()}</h2>
+          <div className="p-4 sm:p-6">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 mb-4 sm:mb-6">{getStepTitle()}</h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
               <div className="space-y-3">
                 <h3 className="font-semibold text-gray-700 text-lg">Front of ID</h3>
                 <img
@@ -232,10 +232,10 @@ const IDCardCapture: React.FC<IDCardCaptureProps> = ({ theme }) => {
               </p>
             </div>
 
-            <div className="flex justify-between">
+            <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-0">
               <button
                 onClick={previousStep}
-                className={`${theme.secondaryBtn} text-white px-6 py-3 rounded-lg flex items-center space-x-2 ${theme.secondaryBtnHover} transition-colors font-medium`}
+                className={`${theme.secondaryBtn} text-white px-6 py-3 rounded-lg flex items-center justify-center space-x-2 ${theme.secondaryBtnHover} transition-colors font-medium`}
               >
                 <ArrowLeft className="w-5 h-5" />
                 <span>Back</span>
@@ -244,7 +244,7 @@ const IDCardCapture: React.FC<IDCardCaptureProps> = ({ theme }) => {
               <button
                 onClick={handleSubmit}
                 disabled={isUploading}
-                className={`${theme.submitBtn} text-white px-8 py-3 rounded-lg flex items-center space-x-2 ${theme.submitBtnHover} transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed`}
+                className={`${theme.submitBtn} text-white px-8 py-3 rounded-lg flex items-center justify-center space-x-2 ${theme.submitBtnHover} transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed`}
               >
                 {isUploading ? (
                   <>
@@ -277,10 +277,10 @@ const IDCardCapture: React.FC<IDCardCaptureProps> = ({ theme }) => {
               <div className={`w-3 h-3 rounded-full ${currentStep === 'owner' || capturedImages.owner ? theme.dotActive : theme.dotInactive}`} />
             </div>
           </div>
-          <p className="text-white/80">{getStepInstructions()}</p>
+          <p className="text-white/80 text-sm sm:text-base">{getStepInstructions()}</p>
         </div>
 
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           <div className="space-y-4">
             {!currentImage ? (
               <>
@@ -321,9 +321,9 @@ const IDCardCapture: React.FC<IDCardCaptureProps> = ({ theme }) => {
                 <div className="flex justify-center">
                   <button
                     onClick={capture}
-                    className={`${theme.primaryBtn} text-white px-8 py-4 rounded-lg flex items-center space-x-3 ${theme.primaryBtnHover} transition-colors shadow-lg font-medium`}
+                    className={`${theme.primaryBtn} text-white px-6 py-3 sm:px-8 sm:py-4 rounded-lg flex items-center space-x-2 sm:space-x-3 ${theme.primaryBtnHover} transition-colors shadow-lg font-medium text-sm sm:text-base`}
                   >
-                    <Camera className="w-6 h-6" />
+                    <Camera className="w-5 h-5 sm:w-6 sm:h-6" />
                     <span>Capture Photo</span>
                   </button>
                 </div>
@@ -346,10 +346,10 @@ const IDCardCapture: React.FC<IDCardCaptureProps> = ({ theme }) => {
                   className="w-full rounded-lg shadow-md"
                 />
 
-                <div className="flex justify-between">
+                <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-0">
                   <button
                     onClick={retake}
-                    className={`${theme.secondaryBtn} text-white px-6 py-3 rounded-lg flex items-center space-x-2 ${theme.secondaryBtnHover} transition-colors font-medium`}
+                    className={`${theme.secondaryBtn} text-white px-6 py-3 rounded-lg flex items-center justify-center space-x-2 ${theme.secondaryBtnHover} transition-colors font-medium`}
                   >
                     <RefreshCw className="w-5 h-5" />
                     <span>Retake</span>
@@ -357,7 +357,7 @@ const IDCardCapture: React.FC<IDCardCaptureProps> = ({ theme }) => {
 
                   <button
                     onClick={nextStep}
-                    className={`${theme.primaryBtn} text-white px-6 py-3 rounded-lg flex items-center space-x-2 ${theme.primaryBtnHover} transition-colors font-medium`}
+                    className={`${theme.primaryBtn} text-white px-6 py-3 rounded-lg flex items-center justify-center space-x-2 ${theme.primaryBtnHover} transition-colors font-medium`}
                   >
                     <span>Continue</span>
                     <ArrowRight className="w-5 h-5" />

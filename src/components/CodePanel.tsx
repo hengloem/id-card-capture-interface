@@ -45,14 +45,14 @@ const CodePanel: React.FC<CodePanelProps> = ({ theme }) => {
   return (
     <div className="h-full flex flex-col bg-[#1e1e2e] rounded-xl overflow-hidden border border-slate-700/50 shadow-2xl">
       {/* Framework toggle + tab bar */}
-      <div className="flex items-center bg-[#181825] border-b border-slate-700/50">
+      <div className="flex flex-wrap items-center bg-[#181825] border-b border-slate-700/50">
         {/* React / Angular toggle */}
-        <div className="flex items-center bg-slate-900/60 rounded-md m-2 p-0.5 border border-slate-700/40 shrink-0">
+        <div className="flex items-center bg-slate-900/60 rounded-md m-1.5 sm:m-2 p-0.5 border border-slate-700/40 shrink-0">
           {(['react', 'angular'] as Framework[]).map((fw) => (
             <button
               key={fw}
               onClick={() => switchFramework(fw)}
-              className={`px-3 py-1.5 rounded text-xs font-semibold transition-all ${
+              className={`px-2.5 sm:px-3 py-1.5 rounded text-xs font-semibold transition-all ${
                 framework === fw
                   ? 'bg-blue-600 text-white shadow-sm'
                   : 'text-slate-400 hover:text-slate-200'
@@ -64,7 +64,7 @@ const CodePanel: React.FC<CodePanelProps> = ({ theme }) => {
         </div>
 
         {/* Snippet tabs */}
-        <div className="flex items-center overflow-x-auto custom-scrollbar">
+        <div className="flex items-center overflow-x-auto custom-scrollbar flex-1 min-w-0">
           {snippets.map((snippet, idx) => (
             <button
               key={snippet.label}
@@ -72,7 +72,7 @@ const CodePanel: React.FC<CodePanelProps> = ({ theme }) => {
                 setActiveIndex(idx);
                 setCopied(false);
               }}
-              className={`flex items-center gap-2 px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors border-b-2 ${
+              className={`flex items-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-medium whitespace-nowrap transition-colors border-b-2 ${
                 activeIndex === idx
                   ? 'text-blue-400 border-blue-400 bg-[#1e1e2e]'
                   : 'text-slate-400 border-transparent hover:text-slate-200 hover:bg-slate-800/40'
@@ -85,7 +85,7 @@ const CodePanel: React.FC<CodePanelProps> = ({ theme }) => {
         </div>
 
         {/* Copy button */}
-        <div className="ml-auto pr-3 shrink-0">
+        <div className="ml-auto pr-2 sm:pr-3 shrink-0 m-1.5 sm:m-0">
           <button
             onClick={handleCopy}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
@@ -110,21 +110,21 @@ const CodePanel: React.FC<CodePanelProps> = ({ theme }) => {
       </div>
 
       {/* Filename bar */}
-      <div className="flex items-center gap-2 px-4 py-2 bg-[#1e1e2e] border-b border-slate-700/30">
+      <div className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-[#1e1e2e] border-b border-slate-700/30">
         <div className="flex gap-1.5">
           <div className="w-2.5 h-2.5 rounded-full bg-red-400/70" />
           <div className="w-2.5 h-2.5 rounded-full bg-yellow-400/70" />
           <div className="w-2.5 h-2.5 rounded-full bg-green-400/70" />
         </div>
-        <span className="text-slate-400 text-xs font-mono ml-2">{current.filename}</span>
-        <span className="ml-auto text-xs text-slate-500">
+        <span className="text-slate-400 text-xs font-mono ml-2 truncate">{current.filename}</span>
+        <span className="ml-auto text-xs text-slate-500 hidden sm:inline shrink-0">
           {framework === 'react' ? 'React + TypeScript' : 'Angular + TypeScript'}
         </span>
       </div>
 
       {/* Code area */}
       <div className="flex-1 overflow-auto custom-scrollbar">
-        <pre className="p-4 text-sm leading-relaxed font-mono text-slate-300">
+        <pre className="p-3 sm:p-4 text-xs sm:text-sm leading-relaxed font-mono text-slate-300">
           <code>{code}</code>
         </pre>
       </div>
